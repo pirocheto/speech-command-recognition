@@ -1,0 +1,27 @@
+
+stages:
+  download_data:
+    cmd:
+      - mkdir -p data
+      - wget https://storage.googleapis.com/public-datasets-mswc/splits/fr.tar.gz -O data/splits.tar.gz
+      - wget https://storage.googleapis.com/public-datasets-mswc/audio/fr.tar.gz -O data/audio.tar.gz
+      - tar -xvf data/splits.tar.gz -C data/splits 
+    outs:
+      - data/splits.tar.gz
+      - data/audio.tar.gz
+      - data/splits
+
+  uncompress:
+    foreach:
+      - gauche
+      - droite
+      - avance
+      - recule
+      - stop
+      - start
+    do:
+      cmd: mkdir -p data/audio && tar -xvf data/audio.tar.gz -C data/audio fr/clips/${item}
+
+  create_datatset:
+    cmd:
+      - python src/uncompress.py

@@ -1,0 +1,43 @@
+schema: '2.0'
+stages:
+  download_data:
+    cmd:
+    - mkdir -p data
+    - wget https://storage.googleapis.com/public-datasets-mswc/splits/fr.tar.gz -O
+      data/splits.tar.gz
+    - wget https://storage.googleapis.com/public-datasets-mswc/audio/fr.tar.gz -O
+      data/audio.tar.gz
+  uncompress:
+    cmd:
+    - mkdir -p data/audio/left
+    - tar -xvf data/audio.tar.gz -C data/audio/left '*gauche*'
+  uncompress@words:
+    cmd:
+    - mkdir -p data/audio/words
+    - "for word in --left gauche gauches --right droite droites\ndo\n  echo \"word:
+      $fruit\"\ndone\n"
+  uncompress@0:
+    cmd:
+    - mkdir -p data/audio/left
+    - "for fruit in \"gauche gauches[@]\"\ndo\n  echo \"Fruit: $fruit\"\ndone\n"
+  uncompress@1:
+    cmd:
+    - mkdir -p data/audio/right
+    - "for fruit in \"droite droites[@]\"\ndo\n  echo \"Fruit: $fruit\"\ndone\n"
+  uncompress@gauche:
+    cmd: mkdir -p data/audio && tar -xvf data/audio.tar.gz -C data/audio fr/clips/gauche
+  uncompress@droite:
+    cmd: mkdir -p data/audio && tar -xvf data/audio.tar.gz -C data/audio fr/clips/droite
+  uncompress@droites:
+    cmd: mkdir -p data/audio && tar -xvf data/audio.tar.gz -C data/audio fr/clips/droites
+  uncompress@avance:
+    cmd: mkdir -p data/audio && tar -xvf data/audio.tar.gz -C data/audio fr/clips/avance
+  uncompress@recule:
+    cmd: mkdir -p data/audio && tar -xvf data/audio.tar.gz -C data/audio fr/clips/recule
+  uncompress@stop:
+    cmd: mkdir -p data/audio && tar -xvf data/audio.tar.gz -C data/audio fr/clips/stop
+  uncompress@start:
+    cmd: mkdir -p data/audio && tar -xvf data/audio.tar.gz -C data/audio fr/clips/start
+  create_datatset:
+    cmd:
+    - python src/uncompress.py

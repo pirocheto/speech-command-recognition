@@ -1,0 +1,5 @@
+commands:
+  - name: left
+    pattern: ^gauches?$
+  - name: right
+    pattern: ^droites?$
